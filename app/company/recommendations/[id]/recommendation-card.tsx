@@ -161,7 +161,7 @@ export function RecommendationCard({
             hint="ponderado"
           />
           <SmallStat
-            label="Volumen INFLU"
+            label="Volumen Linkfluence"
             value={formatNumber(rec.evidence.volume)}
             hint="clicks"
           />

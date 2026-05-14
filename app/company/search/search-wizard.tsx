@@ -289,7 +289,7 @@ function ResultsList({
   return (
     <div className="space-y-5">
       {results.catalog.length > 0 && (
-        <Section title="En el catálogo INFLU" icon={<ShieldCheck className="h-4 w-4 text-success" />}>
+        <Section title="En el catálogo Linkfluence" icon={<ShieldCheck className="h-4 w-4 text-success" />}>
           <div className="space-y-2">
             {results.catalog.map((it) => (
               <button

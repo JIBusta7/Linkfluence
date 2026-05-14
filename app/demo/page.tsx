@@ -2,6 +2,7 @@ import Link from 'next/link';
 import { ArrowRight, KeyRound, Play, Sparkles } from 'lucide-react';
 import { buttonVariants } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Logo } from '@/components/logo';
 import { cn } from '@/lib/utils';
 
 export default function DemoPage() {
@@ -9,11 +10,8 @@ export default function DemoPage() {
     <main className="min-h-screen">
       <header className="border-b">
         <div className="container flex h-16 items-center justify-between">
-          <Link href="/" className="flex items-center gap-2 text-lg font-semibold">
-            <span className="inline-flex h-7 w-7 items-center justify-center rounded-md bg-primary text-primary-foreground">
-              i
-            </span>
-            INFLU
+          <Link href="/">
+            <Logo textClass="text-lg" />
           </Link>
           <Link href="/login" className={cn(buttonVariants({ variant: 'ghost' }))}>
             Ir a login
@@ -27,7 +25,7 @@ export default function DemoPage() {
             <Play className="h-3 w-3" /> Demo guiada
           </div>
           <h1 className="text-balance text-4xl font-bold tracking-tight md:text-5xl">
-            Recorré INFLU en 3 pasos
+            Recorré Linkfluence en 3 pasos
           </h1>
           <p className="text-lg text-muted-foreground">
             Hay tres perfiles armados con data seed lista para usarse.

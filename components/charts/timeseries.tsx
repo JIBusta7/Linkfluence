@@ -21,6 +21,7 @@ export function TimeseriesChart({
         <XAxis dataKey="date" tickLine={false} axisLine={false} fontSize={11} />
         <YAxis tickLine={false} axisLine={false} fontSize={12} />
         <Tooltip
+          cursor={{ stroke: 'hsl(var(--muted-foreground))', strokeOpacity: 0.3 }}
           contentStyle={{
             borderRadius: 8,
             border: '1px solid hsl(var(--border))',
@@ -28,11 +29,11 @@ export function TimeseriesChart({
             fontSize: 12,
           }}
         />
-        <Line type="monotone" dataKey="clicks" stroke="hsl(var(--primary))" strokeWidth={2} dot={false} />
+        <Line type="monotone" dataKey="clicks" stroke="hsl(var(--success))" strokeWidth={2} dot={false} />
         <Line
           type="monotone"
           dataKey="conversions"
-          stroke="hsl(var(--coral-strong))"
+          stroke="hsl(var(--muted-foreground))"
           strokeWidth={2}
           strokeDasharray="4 2"
           dot={false}

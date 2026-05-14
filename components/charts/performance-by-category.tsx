@@ -22,6 +22,11 @@ export function PerformanceByCategoryChart({
         <XAxis dataKey="category" tickLine={false} axisLine={false} fontSize={12} />
         <YAxis tickLine={false} axisLine={false} fontSize={12} />
         <Tooltip
+          // cursor: el highlight gris que Recharts pinta al hover. Por
+          // default es gris claro fijo (queda blanco brillante en dark mode).
+          // Lo atamos al token muted-foreground con baja opacidad para que
+          // sea sutil tanto en light como en dark.
+          cursor={{ fill: 'hsl(var(--muted-foreground))', fillOpacity: 0.08 }}
           contentStyle={{
             borderRadius: 8,
             border: '1px solid hsl(var(--border))',
@@ -29,8 +34,11 @@ export function PerformanceByCategoryChart({
             fontSize: 12,
           }}
         />
-        <Bar dataKey="clicks" fill="hsl(var(--primary))" radius={[4, 4, 0, 0]} />
-        <Bar dataKey="conversions" fill="hsl(var(--coral))" radius={[4, 4, 0, 0]} />
+        {/* Verde Linkfluence para clicks (consistente en light/dark) y gris
+            medio para conversiones. Antes usaba var(--primary) que invierte
+            con el tema (negro en light, blanco en dark — feo el blanco puro). */}
+        <Bar dataKey="clicks" fill="hsl(var(--success))" radius={[4, 4, 0, 0]} />
+        <Bar dataKey="conversions" fill="hsl(var(--muted-foreground))" radius={[4, 4, 0, 0]} />
       </BarChart>
     </ResponsiveContainer>
   );

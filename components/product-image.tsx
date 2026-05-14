@@ -20,13 +20,23 @@ interface ProductImageProps {
 export function ProductImage({ product, size = 600, className, aspect = 'square' }: ProductImageProps) {
   const aspectClass =
     aspect === 'square' ? 'aspect-square' : aspect === '4/3' ? 'aspect-[4/3]' : 'aspect-video';
+
+  // Fondo claro fijo (no invertimos en dark mode — el invert+hue-rotate
+  // distorsiona los colores del producto). En dark mode el card del
+  // producto sigue siendo claro, como en ML / Amazon / Mercado Libre.
   return (
-    <div className={cn('relative w-full overflow-hidden bg-muted', aspectClass, className)}>
+    <div
+      className={cn(
+        'relative w-full overflow-hidden bg-zinc-100',
+        aspectClass,
+        className,
+      )}
+    >
       <img
         src={productImageUrl(product, size)}
         alt={product.name}
         loading="lazy"
-        className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
+        className="h-full w-full object-cover mix-blend-multiply transition-transform duration-300 group-hover:scale-105"
       />
     </div>
   );
