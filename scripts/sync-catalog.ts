@@ -185,6 +185,15 @@ interface DummyProduct {
   brand?: string;
 }
 
+function slugify(text: string): string {
+  return text
+    .toLowerCase()
+    .normalize('NFD')
+    .replace(/[̀-ͯ]/g, '') // saca acentos
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-+|-+$/g, '');
+}
+
 async function fetchFromDummyJson(): Promise<CatalogItem[]> {
   const items: CatalogItem[] = [];
   for (const c of DUMMY_CATEGORIES) {
@@ -198,7 +207,12 @@ async function fetchFromDummyJson(): Promise<CatalogItem[]> {
     const products = json.products ?? [];
     console.log(`   DJ ${c.category.padEnd(10)} | ${c.slug.padEnd(22)} → ${products.length}`);
     for (const p of products) {
-      const externalUrl = `${ML_SEARCH_HOST}/${c.esQuery}`;
+      // external_url: usamos el slug del TÍTULO del producto en lugar del de
+      // la categoría. Así al hacer click el usuario llega a resultados
+      // específicos de ese modelo en Mercado Libre (ej:
+      // "Samsung Galaxy S22 Ultra" → listado.mercadolibre.com.uy/samsung-galaxy-s22-ultra).
+      const titleSlug = slugify(p.title) || c.esQuery;
+      const externalUrl = `${ML_SEARCH_HOST}/${titleSlug}`;
       const cleanImg = (p.images?.[0] ?? p.thumbnail ?? '').replace(/^http:/, 'https:');
       items.push({
         name: p.title.slice(0, 200),

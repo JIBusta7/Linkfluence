@@ -10,6 +10,7 @@
     "typecheck": "tsc --noEmit",
     "seed": "tsx --env-file=.env.local scripts/seed.ts",
     "sync:catalog": "tsx --env-file=.env.local scripts/sync-catalog.ts",
+    "meli:auth": "tsx --env-file=.env.local scripts/meli-auth.ts",
     "migrate": "tsx --env-file=.env.local scripts/apply-migration.ts"
   },
   "dependencies": {

@@ -24,7 +24,10 @@ export default async function RecommendationsPage({
   if (!search || search.company_id !== profile.id) notFound();
 
   const query = search.query_payload as QueryPayload;
-  const recs = await recommendInfluencers(query, { topK: 20, topN: 10 });
+  // topN alto: queremos que TODOS los influencers reales aparezcan en la lista,
+  // no solo los seed con mucho historial. El algoritmo igual ordena por fit_score
+  // así que los buenos quedan arriba — pero los nuevos también figuran.
+  const recs = await recommendInfluencers(query, { topK: 30, topN: 50 });
 
   // Pre-cargar explicación determinística (la IA real se pide en un componente aparte)
   const recsWithExplain = recs.map((r) => ({
