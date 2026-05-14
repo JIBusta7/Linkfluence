@@ -97,6 +97,41 @@
   }
 }
 
+/* Forzar light theme en regiones específicas (ej. landing page pública).
+   Hacemos override de TODAS las CSS variables. Como heredan en cascada,
+   cualquier descendiente con bg-card / text-foreground / etc. usa los
+   valores light incluso si el <html> tiene la clase .dark activa. */
+.force-light {
+  --page: 225 36% 97%;
+  --background: 225 36% 97%;
+  --surface: 0 0% 100%;
+  --surface-ghost: 0 0% 96%;
+  --insight: 149 73% 91%;
+  --foreground: 0 0% 11%;
+  --card: 0 0% 100%;
+  --card-foreground: 0 0% 11%;
+  --popover: 0 0% 100%;
+  --popover-foreground: 0 0% 11%;
+  --primary: 0 0% 0%;
+  --primary-foreground: 0 0% 100%;
+  --accent: 152 93% 33%;
+  --accent-foreground: 0 0% 100%;
+  --success: 152 93% 33%;
+  --success-soft: 149 73% 91%;
+  --price: 0 0% 11%;
+  --secondary: 0 0% 96%;
+  --secondary-foreground: 0 0% 11%;
+  --muted: 0 0% 96%;
+  --muted-foreground: 0 0% 43%;
+  --destructive: 0 100% 60%;
+  --destructive-foreground: 0 0% 100%;
+  --destructive-soft: 351 86% 95%;
+  --border: 0 0% 89%;
+  --input: 0 0% 89%;
+  --ring: 152 93% 33%;
+  color-scheme: light;
+}
+
 @layer utilities {
   .bg-page {
     background-color: hsl(var(--page));

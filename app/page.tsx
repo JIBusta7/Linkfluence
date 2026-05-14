@@ -36,8 +36,11 @@ import { cn } from '@/lib/utils';
 // PAGE
 // =========================================================================
 export default function LandingPage() {
+  // force-light: la landing pública siempre se renderiza en modo claro
+  // aunque el usuario tenga el toggle dark mode activado (la app autenticada
+  // sí respeta su preferencia). Override de las CSS variables — ver globals.css.
   return (
-    <main className="min-h-screen bg-surface">
+    <main className="force-light min-h-screen bg-surface text-foreground">
       <NavBar />
       <Hero />
       <StatsStrip />
