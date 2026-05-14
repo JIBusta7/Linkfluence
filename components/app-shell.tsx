@@ -12,6 +12,7 @@ import {
 import type { Role } from '@/lib/types';
 import { SidebarNav, type NavGroup } from '@/components/sidebar-nav';
 import { LogoLink } from '@/components/logo-link';
+import { MobileNav } from '@/components/mobile-nav';
 import { UserMenu } from '@/components/user-menu';
 
 const NAV_BY_ROLE: Record<Role, NavGroup[]> = {
@@ -87,7 +88,8 @@ export function AppShell({
       <div className="flex min-w-0 flex-1 flex-col">
         {/* Top bar */}
         <header className="sticky top-0 z-40 flex h-16 shrink-0 items-center gap-3 border-b border-border bg-surface px-4 md:px-6">
-          {/* Mobile logo */}
+          {/* Mobile: hamburguesa + logo */}
+          <MobileNav groups={nav} />
           <LogoLink
             className="md:hidden transition-opacity hover:opacity-80"
             textClass="text-base"
