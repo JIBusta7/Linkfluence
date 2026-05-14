@@ -31,6 +31,7 @@ const config: Config = {
         destructive: {
           DEFAULT: 'hsl(var(--destructive))',
           foreground: 'hsl(var(--destructive-foreground))',
+          soft: 'hsl(var(--destructive-soft))',
         },
         muted: {
           DEFAULT: 'hsl(var(--muted))',
@@ -39,6 +40,10 @@ const config: Config = {
         accent: {
           DEFAULT: 'hsl(var(--accent))',
           foreground: 'hsl(var(--accent-foreground))',
+        },
+        success: {
+          DEFAULT: 'hsl(var(--success))',
+          soft: 'hsl(var(--success-soft))',
         },
         card: {
           DEFAULT: 'hsl(var(--card))',
@@ -50,15 +55,15 @@ const config: Config = {
         },
       },
       fontFamily: {
-        sans: ['var(--font-inter)', 'Inter', 'system-ui', 'sans-serif'],
-        mono: ['var(--font-inter)', 'Inter', 'ui-monospace', 'monospace'],
+        sans: ['var(--font-poppins)', 'Poppins', 'system-ui', 'sans-serif'],
+        mono: ['ui-monospace', 'SFMono-Regular', 'monospace'],
       },
       fontSize: {
-        'display-xl': ['48px', { lineHeight: '1.1', letterSpacing: '-0.04em', fontWeight: '600' }],
-        'headline-lg': ['30px', { lineHeight: '1.2', letterSpacing: '-0.02em', fontWeight: '500' }],
-        'headline-md': ['20px', { lineHeight: '1.4', letterSpacing: '-0.01em', fontWeight: '500' }],
-        'body-base': ['14px', { lineHeight: '1.6', letterSpacing: '0em', fontWeight: '400' }],
-        'label-caps': ['11px', { lineHeight: '1', letterSpacing: '0.1em', fontWeight: '600' }],
+        'display-xl': ['48px', { lineHeight: '1.1', letterSpacing: '-0.03em', fontWeight: '700' }],
+        'headline-lg': ['28px', { lineHeight: '1.2', letterSpacing: '-0.02em', fontWeight: '600' }],
+        'headline-md': ['20px', { lineHeight: '1.3', letterSpacing: '-0.01em', fontWeight: '600' }],
+        'body-base': ['14px', { lineHeight: '1.55', letterSpacing: '0em', fontWeight: '400' }],
+        'label-caps': ['11px', { lineHeight: '1', letterSpacing: '0.08em', fontWeight: '500' }],
         'mono-data': ['13px', { lineHeight: '1', letterSpacing: '-0.01em', fontWeight: '500' }],
       },
       spacing: {
@@ -66,13 +71,15 @@ const config: Config = {
         'container-margin': '48px',
       },
       borderRadius: {
-        lg: 'var(--radius)',
-        md: 'calc(var(--radius) - 2px)',
-        sm: 'calc(var(--radius) - 2px)',
-        badge: '2px',
+        // 6px para cards/contenedores, 4px para inputs/botones/badges
+        lg: 'var(--radius)',                  /* 6px */
+        md: 'calc(var(--radius) - 2px)',      /* 4px */
+        sm: 'calc(var(--radius) - 2px)',      /* 4px */
+        badge: 'calc(var(--radius) - 2px)',   /* 4px */
       },
       boxShadow: {
-        float: '0 20px 40px rgba(0, 0, 0, 0.04)',
+        card: '0 1px 2px rgba(0,0,0,0.04), 0 0 0 1px rgba(0,0,0,0.04)',
+        float: '0 20px 40px rgba(0, 0, 0, 0.06)',
       },
     },
   },

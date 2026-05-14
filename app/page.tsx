@@ -105,40 +105,72 @@ function Hero() {
 }
 
 function ProductGridPreview() {
-  const items = [
-    { name: 'Campera de cuero marrón', price: 280, cat: 'moda', seed: 'campera-cuero' },
-    { name: 'Zapatillas running Pro', price: 180, cat: 'deportes', seed: 'zapatillas' },
-    { name: 'Auriculares inalámbricos pro', price: 220, cat: 'tech', seed: 'auriculares' },
-    { name: 'Perfume premium 100ml', price: 180, cat: 'belleza', seed: 'perfume' },
+  // Mockup del producto: simula el dashboard del influencer con un link
+  // generado, KPIs y una mini gráfica. Sin imágenes externas — todo es UI.
+  const categories = [
+    { name: 'moda', pct: 64 },
+    { name: 'tech', pct: 22 },
+    { name: 'belleza', pct: 14 },
   ];
+  const bars = [24, 38, 22, 56, 42, 70, 48];
   return (
-    <div className="grid grid-cols-2 gap-3">
-      {items.map((p) => (
-        <div
-          key={p.seed}
-          className="overflow-hidden rounded-lg border bg-surface shadow-sm"
-        >
-          <div className="aspect-square w-full overflow-hidden bg-muted">
-            <img
-              src={`https://picsum.photos/seed/${p.seed}/400/400`}
-              alt={p.name}
-              className="h-full w-full object-cover"
-            />
-          </div>
-          <div className="space-y-1 p-3">
-            <div className="text-[10px] uppercase tracking-wide text-muted-foreground">
-              {p.cat}
-            </div>
-            <div className="line-clamp-1 text-sm font-medium">{p.name}</div>
-            <div className="flex items-center justify-between">
-              <span className="text-lg font-bold text-price">US$ {p.price}</span>
-              <span className="flex items-center gap-0.5 text-[10px] font-medium text-success">
-                <ShieldCheck className="h-3 w-3" /> Verificado
-              </span>
-            </div>
+    <div className="space-y-4 rounded-lg border bg-surface p-5 shadow-float">
+      <div className="space-y-1.5">
+        <div className="text-[11px] font-medium uppercase tracking-wider text-muted-foreground">
+          Tu link personal
+        </div>
+        <div className="flex items-center gap-2 rounded border bg-muted/30 px-3 py-2 text-sm font-mono">
+          <Link2 className="h-3.5 w-3.5 text-muted-foreground" />
+          <span className="truncate">linkfluence.app/r/<span className="font-semibold text-foreground">AmY9X</span></span>
+        </div>
+      </div>
+
+      <div className="grid grid-cols-2 gap-3">
+        <div className="rounded border bg-surface p-3">
+          <div className="text-2xl font-bold leading-tight">223</div>
+          <div className="text-xs text-muted-foreground">Clicks totales</div>
+          <div className="mt-1 inline-flex items-center gap-0.5 text-[11px] font-medium text-success">
+            <ArrowRight className="h-3 w-3 -rotate-45" /> 22.4%
           </div>
         </div>
-      ))}
+        <div className="rounded border bg-surface p-3">
+          <div className="text-2xl font-bold leading-tight">4.9%</div>
+          <div className="text-xs text-muted-foreground">CR global</div>
+          <div className="mt-1 inline-flex items-center gap-0.5 text-[11px] font-medium text-success">
+            <ArrowRight className="h-3 w-3 -rotate-45" /> 1.2pp
+          </div>
+        </div>
+      </div>
+
+      <div className="space-y-2">
+        <div className="flex items-end justify-between gap-1 h-16">
+          {bars.map((h, i) => (
+            <div
+              key={i}
+              className="flex-1 rounded-sm bg-success/30"
+              style={{ height: `${(h / 70) * 100}%` }}
+            />
+          ))}
+        </div>
+        <div className="text-[10px] text-muted-foreground text-right">últimos 7 días</div>
+      </div>
+
+      <div className="space-y-1.5">
+        <div className="text-[11px] font-medium uppercase tracking-wider text-muted-foreground">
+          Categorías top
+        </div>
+        {categories.map((c) => (
+          <div key={c.name} className="space-y-1">
+            <div className="flex justify-between text-xs">
+              <span className="capitalize font-medium">{c.name}</span>
+              <span className="text-muted-foreground">{c.pct}%</span>
+            </div>
+            <div className="h-1.5 w-full overflow-hidden rounded-full bg-muted">
+              <div className="h-full rounded-full bg-success" style={{ width: `${c.pct}%` }} />
+            </div>
+          </div>
+        ))}
+      </div>
     </div>
   );
 }

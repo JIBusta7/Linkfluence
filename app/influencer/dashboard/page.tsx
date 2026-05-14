@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import { Link2, MousePointerClick, Target, TrendingUp } from 'lucide-react';
 import { requireRole } from '@/lib/auth';
 import { formatMoney, formatNumber, formatPercent } from '@/lib/utils';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -30,6 +31,8 @@ export default async function InfluencerDashboardPage() {
   const topProducts = await fetchTopProducts(supabase, profile.id);
   const deviceStats = await fetchDeviceStats(supabase, profile.id);
   const peakHours = await fetchPeakHours(supabase, profile.id);
+  const trends = await fetchTrends(supabase, profile.id);
+  const uniqueClicks = await fetchUniqueClicks(supabase, profile.id);
 
   return (
     <div className="space-y-6">
@@ -49,13 +52,31 @@ export default async function InfluencerDashboardPage() {
       </div>
 
       <div className="grid gap-4 md:grid-cols-4">
-        <KPITile label="Links activos" value={formatNumber(totals.total_links)} />
-        <KPITile label="Clicks totales" value={formatNumber(totals.total_clicks)} />
-        <KPITile label="Conversiones" value={formatNumber(totals.total_conversions)} />
+        <KPITile
+          label="Links activos"
+          value={formatNumber(totals.total_links)}
+          icon={<Link2 className="h-5 w-5" />}
+          trend={trends.links}
+        />
+        <KPITile
+          label="Clicks totales"
+          value={formatNumber(totals.total_clicks)}
+          icon={<MousePointerClick className="h-5 w-5" />}
+          trend={trends.clicks}
+          hint={`${formatNumber(uniqueClicks)} únicos (sin bots)`}
+        />
+        <KPITile
+          label="Conversiones"
+          value={formatNumber(totals.total_conversions)}
+          icon={<Target className="h-5 w-5" />}
+          trend={trends.conversions}
+        />
         <KPITile
           label="CR global"
           value={formatPercent(totals.cr_global)}
-          hint={`Revenue estimado: ${formatMoney(totals.total_revenue)}`}
+          hint={`Revenue: ${formatMoney(totals.total_revenue)}`}
+          icon={<TrendingUp className="h-5 w-5" />}
+          trend={trends.revenue}
         />
       </div>
 
@@ -207,6 +228,98 @@ function aggregateByCategory(
       cr: v.clicks ? v.conversions / v.clicks : 0,
     }))
     .sort((a, b) => b.clicks - a.clicks);
+}
+
+// Cuenta clicks únicos (distinct ip_hash) — métrica más honesta que los
+// totales porque ignora reloads y bots que no hayan sido filtrados.
+async function fetchUniqueClicks(supabase: any, influencerId: string): Promise<number> {
+  const { data: links } = await supabase
+    .from('links')
+    .select('id')
+    .eq('influencer_id', influencerId);
+  const linkIds = (links ?? []).map((l: any) => l.id);
+  if (linkIds.length === 0) return 0;
+
+  const { data: events } = await supabase
+    .from('click_events')
+    .select('ip_hash')
+    .in('link_id', linkIds)
+    .not('ip_hash', 'is', null);
+
+  const seen = new Set<string>();
+  for (const e of events ?? []) {
+    if (e.ip_hash) seen.add(e.ip_hash);
+  }
+  return seen.size;
+}
+
+// Compara los últimos 7 días con los 7 previos. Devuelve % de cambio firmado.
+// Si el período anterior no tiene data (división por 0), devuelve undefined.
+async function fetchTrends(supabase: any, influencerId: string) {
+  const now = new Date();
+  const d7 = new Date(now.getTime() - 7 * 86400_000);
+  const d14 = new Date(now.getTime() - 14 * 86400_000);
+
+  const { data: links } = await supabase
+    .from('links')
+    .select('id, created_at')
+    .eq('influencer_id', influencerId);
+  const linkIds = (links ?? []).map((l: any) => l.id);
+
+  const pctChange = (curr: number, prev: number): number | undefined => {
+    if (prev === 0) return curr === 0 ? undefined : 100;
+    return ((curr - prev) / prev) * 100;
+  };
+
+  if (linkIds.length === 0) {
+    return { links: undefined, clicks: undefined, conversions: undefined, revenue: undefined };
+  }
+
+  // Links creados en cada ventana
+  const linksLast7 = (links ?? []).filter((l: any) => new Date(l.created_at) >= d7).length;
+  const linksPrev7 = (links ?? []).filter(
+    (l: any) => new Date(l.created_at) >= d14 && new Date(l.created_at) < d7,
+  ).length;
+
+  const [clickEvents, conversions] = await Promise.all([
+    supabase
+      .from('click_events')
+      .select('created_at')
+      .in('link_id', linkIds)
+      .gte('created_at', d14.toISOString()),
+    supabase
+      .from('conversions')
+      .select('occurred_at, amount')
+      .in('link_id', linkIds)
+      .gte('occurred_at', d14.toISOString()),
+  ]);
+
+  let clicksLast = 0, clicksPrev = 0;
+  for (const c of clickEvents.data ?? []) {
+    const t = new Date(c.created_at);
+    if (t >= d7) clicksLast++;
+    else clicksPrev++;
+  }
+
+  let convsLast = 0, convsPrev = 0, revLast = 0, revPrev = 0;
+  for (const c of conversions.data ?? []) {
+    const t = new Date(c.occurred_at);
+    const amt = Number(c.amount) || 0;
+    if (t >= d7) {
+      convsLast++;
+      revLast += amt;
+    } else {
+      convsPrev++;
+      revPrev += amt;
+    }
+  }
+
+  return {
+    links: pctChange(linksLast7, linksPrev7),
+    clicks: pctChange(clicksLast, clicksPrev),
+    conversions: pctChange(convsLast, convsPrev),
+    revenue: pctChange(revLast, revPrev),
+  };
 }
 
 async function fetchTopProducts(supabase: any, influencerId: string) {
